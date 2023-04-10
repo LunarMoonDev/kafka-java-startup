@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 	implementation 'org.springframework.kafka:spring-kafka:3.0.5'
 	implementation 'org.springframework.boot:spring-boot-starter'
 	compileOnly 'org.projectlombok:lombok'
@@ -27,6 +28,3 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
