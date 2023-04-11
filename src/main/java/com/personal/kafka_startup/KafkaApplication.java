@@ -19,7 +19,10 @@ import java.util.concurrent.CompletableFuture;
 public class KafkaApplication {
 	@Autowired
 	public KafkaTemplate<String, String> kafkaTemplate;
-	private static final String TOPIC = "TopicA";
+	private static final String TOPIC_A = "TopicA";
+	private static final String TOPIC_B = "TopicB";
+
+	private static final String[] TOPICS = {TOPIC_A, TOPIC_B};
 
 	public static void main(String[] args) {
 		SpringApplication.run(KafkaApplication.class, args);
@@ -30,7 +33,7 @@ public class KafkaApplication {
 	 * @param message
 	 */
 	public static void sendMessage(String message, String topic, KafkaTemplate<String, String> producer) {
-		CompletableFuture<SendResult<String, String>> future = producer.send(TOPIC, message);
+		CompletableFuture<SendResult<String, String>> future = producer.send(topic, message);
 		future.whenComplete((result, ex) -> {
 			if (ex == null) {
 				System.out.println("Sent message=["+message+"] with offset=["+result.getRecordMetadata().offset()+"]");
@@ -44,13 +47,19 @@ public class KafkaApplication {
 	 * Consumer that listens to the topic and processes it
 	 * @param message
 	 */
-	@KafkaListener(topics = TOPIC, groupId = "groupId")
+	@KafkaListener(topics = TOPIC_A, groupId = "groupId")
 	public void listenGroupFoo(String message) {
 		System.out.println("Received Message in group foo: "+message);
 	}
 
+	@KafkaListener(topics = {"TopicA", "TopicB"}, groupId = "groupId")
+	public void listenGroupFooMultiTopic(String message) {
+		System.out.println("Received Message from multiTopic: "+message);
+	}
+
 	@PostConstruct
 	public void init() {
-		sendMessage("Hello World!", TOPIC, kafkaTemplate);
+		sendMessage("Hello World!", TOPIC_A, kafkaTemplate);
+		sendMessage("Hi World!", TOPIC_B, kafkaTemplate);
 	}
 }

@@ -33,4 +33,13 @@ public class KafkaTopicConfig {
     public NewTopic topic1() {
         return new NewTopic("TopicA", 1, (short) 1);
     }
+
+    /**
+     * Create another topic
+     * @return
+     */
+    @Bean
+    public NewTopic topic2() {
+        return new NewTopic("TopicB", 1, (short) 1);
+    }
 }
