@@ -47,19 +47,55 @@ public class KafkaApplication {
 	 * Consumer that listens to the topic and processes it
 	 * @param message
 	 */
-	@KafkaListener(topics = TOPIC_A, groupId = "groupId")
+	@KafkaListener(topics = TOPIC_A, groupId = "group3")
 	public void listenGroupFoo(String message) {
-		System.out.println("Received Message in group foo: "+message);
+		System.out.println("[SIMPLE] Received Message in group foo: "+message);
 	}
 
-	@KafkaListener(topics = {"TopicA", "TopicB"}, groupId = "groupId")
+	@KafkaListener(topics = {"TopicA", "TopicB"}, groupId = "group2")
 	public void listenGroupFooMultiTopic(String message) {
-		System.out.println("Received Message from multiTopic: "+message);
+		System.out.println("[MULTI] Received Message from multiTopic: "+message);
+	}
+
+	@KafkaListener(
+			topicPartitions = @TopicPartition(topic = TOPIC_A,
+					partitionOffsets = {
+						@PartitionOffset(partition = "0", initialOffset = "0"),
+						@PartitionOffset(partition = "1", initialOffset = "0"),
+					}
+			),
+			groupId = "group1"
+	)
+	public void listenToPartition(@Payload String message, @Header(KafkaHeaders.RECEIVED_PARTITION) int partition){
+		System.out.println("[OFFSET] Received Message: "+message+" from partition: "+partition);
 	}
 
 	@PostConstruct
 	public void init() {
-		sendMessage("Hello World!", TOPIC_A, kafkaTemplate);
-		sendMessage("Hi World!", TOPIC_B, kafkaTemplate);
+		sendMessage("Message1", TOPIC_A, kafkaTemplate);
+		sendMessage("Message3", TOPIC_A, kafkaTemplate);
+		sendMessage("Message2", TOPIC_A, kafkaTemplate);
+		sendMessage("Message4", TOPIC_A, kafkaTemplate);
+		sendMessage("Message5", TOPIC_A, kafkaTemplate);
+		sendMessage("Message6", TOPIC_A, kafkaTemplate);
+		sendMessage("Message7", TOPIC_A, kafkaTemplate);
+		sendMessage("Message8", TOPIC_A, kafkaTemplate);
+		sendMessage("Message9", TOPIC_A, kafkaTemplate);
+		sendMessage("Message10", TOPIC_A, kafkaTemplate);
+		sendMessage("Message11", TOPIC_A, kafkaTemplate);
+		sendMessage("Message12", TOPIC_A, kafkaTemplate);
+
+		sendMessage("BMessage1", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage3", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage2", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage4", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage5", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage6", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage7", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage8", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage9", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage10", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage11", TOPIC_B, kafkaTemplate);
+		sendMessage("BMessage12", TOPIC_B, kafkaTemplate);
 	}
 }

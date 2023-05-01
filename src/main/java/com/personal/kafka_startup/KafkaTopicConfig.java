@@ -31,7 +31,7 @@ public class KafkaTopicConfig {
      */
     @Bean
     public NewTopic topic1() {
-        return new NewTopic("TopicA", 1, (short) 1);
+        return new NewTopic("TopicA", 3, (short) 2);
     }
 
     /**
@@ -40,6 +40,6 @@ public class KafkaTopicConfig {
      */
     @Bean
     public NewTopic topic2() {
-        return new NewTopic("TopicB", 1, (short) 1);
+        return new NewTopic("TopicB", 3, (short) 2);
     }
 }
